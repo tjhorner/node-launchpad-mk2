@@ -1,10 +1,12 @@
 // TODO: actual tests
 var Launchpad = require('..'),
     launchpad = new Launchpad.connect({
-      in: 0,
-      out: 1,
+      in: 1,
+      out: 2,
       type: Launchpad.types.PRO
     });
+
+launchpad.toLayout(Launchpad.layouts.PROGRAMMER);
 
 launchpad.darkAll();
 
@@ -16,6 +18,6 @@ launchpad.darkAll();
 launchpad.on("press", function(button, velocity){
   console.log("Button", button.x, button.y, "pressed with velocity", velocity);
   button.setColor(Math.floor((Math.random() * 127) + 1));
+  // button.setRgbColor(30, 10, 0);
   if(button.x === 1 && button.y === 0) launchpad.darkAll();
-  launchpad.forceBootloader();
 });

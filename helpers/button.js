@@ -28,6 +28,11 @@ function Button(launchpad, note){
     launchpad._output.sendMessage([144, self.toNote(), color]);
   }
 
+  // rgb values 0-63 I think
+  this.setRgbColor = function(r, g, b){
+    launchpad._output.sendMessage([240, 0, 32, 41, 2, 16, 11, self.toNote(), r, g, b, 247]);
+  }
+
   this.getColor = function(){
     return self.color;
   }

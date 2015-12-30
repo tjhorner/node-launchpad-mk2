@@ -1,7 +1,8 @@
 {
   "name": "launchpad-mk2",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Node module for interfacing with the Launchpad MK2 and Launchpad Pro",
+  "repository": "https://github.com/tjhorner/node-launchpad-mk2",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

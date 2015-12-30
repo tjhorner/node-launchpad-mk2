@@ -60,8 +60,19 @@ function Launchpad(params){
     });
   }
 
-  this.forceBootloader = function(){
-    self._output.sendMessage([240, 0, 32, 41, 2, 16, 0, 105, 247]);
+  // defunct for now
+  this.sendSysEx = function(bytes){
+    // sysex header
+    var message = [240, 0, 32, 41, 2, 16];
+    // sysex message
+    message.concat(bytes);
+    // sysex terminator
+    message.push(247);
+    self._output.sendMessage(message);
+  }
+
+  this.toLayout = function(layout){
+    self._output.sendMessage([240, 0, 32, 41, 2, 16, 44, layout, 247]);
   }
 
   return this;
@@ -72,5 +83,11 @@ util.inherits(Launchpad, EventEmitter);
 module.exports = {
   connect: Launchpad,
   types: types,
-  getColor: color.getLaunchpadColor
+  getColor: color.getLaunchpadColor,
+  layouts: {
+    NOTE: 0,
+    DRUM: 1,
+    FADE: 2,
+    PROGRAMMER: 3
+  }
 };
