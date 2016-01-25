@@ -1,3 +1,6 @@
+// TODO we don't need this anymore
+// since I discovered sysex messages
+
 var launchColors = require('./colors.json');
 
 Array.min = function(array){

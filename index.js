@@ -44,13 +44,34 @@ function Launchpad(params){
     throw new Error("// TODO: Implement MK2 support.");
   }
 
+  // convenience method for adding the header and terminator to sysex messages
+  this.sendSysEx = function(bytes){
+    // sysex header
+    var message = [240, 0, 32, 41, 2, 16];
+    // sysex message
+    bytes.forEach(function(byte){
+      message.push(byte);
+    });
+    // sysex terminator
+    message.push(247);
+    // console.log("sysex", message);
+    self._output.sendMessage(message);
+  }
+
   this.getButton = function(x, y){
     return self.buttons[(x.toString() === "0" ? "" : x.toString()) + y.toString()];
   }
 
   this.lightAll = function(color){
+    self.sendSysEx([14, color]);
+    // self.buttons.forEach(function(button){
+    //   button.setColor(color);
+    // });
+  }
+
+  this.lightAllRgb = function(r, g, b){
     self.buttons.forEach(function(button){
-      button.setColor(color);
+      button.setRgbColor(r, g, b);
     });
   }
 
@@ -60,19 +81,17 @@ function Launchpad(params){
     });
   }
 
-  // defunct for now
-  this.sendSysEx = function(bytes){
-    // sysex header
-    var message = [240, 0, 32, 41, 2, 16];
-    // sysex message
-    message.concat(bytes);
-    // sysex terminator
-    message.push(247);
-    self._output.sendMessage(message);
-  }
-
   this.toLayout = function(layout){
     self._output.sendMessage([240, 0, 32, 41, 2, 16, 44, layout, 247]);
+  }
+
+  this.scrollText = function(text, color, loop, speed){
+    var message = [20, color, loop];
+    for(var i=0;i<text.length;i++){
+      message.push(text.charCodeAt(i));
+    }
+    self.sendSysEx(message);
+    if(speed) self.sendSysEx([20, color, loop, speed]);
   }
 
   return this;

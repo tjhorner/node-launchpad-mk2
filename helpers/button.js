@@ -28,9 +28,13 @@ function Button(launchpad, note){
     launchpad._output.sendMessage([144, self.toNote(), color]);
   }
 
-  // rgb values 0-63 I think
+  this.pulseColor = function(color){
+    launchpad.sendSysEx([40, self.toNote(), color]);
+  }
+
+  // rgb values 0-63
   this.setRgbColor = function(r, g, b){
-    launchpad._output.sendMessage([240, 0, 32, 41, 2, 16, 11, self.toNote(), r, g, b, 247]);
+    launchpad.sendSysEx([11, self.toNote(), r, g, b]);
   }
 
   this.getColor = function(){
