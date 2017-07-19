@@ -1,6 +1,6 @@
 {
   "name": "launchpad-mk2",
-  "version": "1.0.4",
+  "version": "2.0.0",
   "description": "Node module for interfacing with the Launchpad MK2 and Launchpad Pro",
   "repository": "https://github.com/tjhorner/node-launchpad-mk2",
   "main": "index.js",
