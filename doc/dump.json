@@ -1,0 +1,1620 @@
+[
+  {
+    "__docId__": 0,
+    "kind": "file",
+    "name": "src/helpers/button.js",
+    "content": "/**\r\n * Represents a button on the Launchpad.\r\n * \r\n * @class Button\r\n */\r\nexport default class Button{\r\n  /**\r\n   * Creates an instance of Button. You shouldn't need to use this, Buttons are generated with a Launchpad instance.\r\n   * @param {Launchpad} launchpad The Launchpad this button belongs to.\r\n   * @param {Number} note The note representation of the button, used when sending messages to the Launchpad.\r\n   * \r\n   * @memberOf Button\r\n   */\r\n  constructor(launchpad, note) {\r\n    /**\r\n     * The Launchpad this button belongs to.\r\n     * @type {Launchpad}\r\n     */\r\n    this.launchpad = launchpad\r\n\r\n    /**\r\n     * The note representation of this button.\r\n     * @type {Number}\r\n     */\r\n    this.note = note\r\n\r\n    var noteAsString = note.toString().split(\"\")\r\n\r\n    /**\r\n     * The x-coordinate of this button.\r\n     * @type {Number}\r\n     */\r\n    this.x = null\r\n\r\n    /**\r\n     * The y-coordinate of this button.\r\n     * @type {Number}\r\n     */\r\n    this.y = null\r\n\r\n    if(noteAsString[1] === \"0\"){\r\n      // left button\r\n      this.x = 0\r\n      this.y = parseInt(noteAsString[0])\r\n    }else if(!noteAsString[1]){\r\n      // bottom button\r\n      this.x = parseInt(noteAsString[0])\r\n      this.y = 0\r\n    }else{\r\n      // any other\r\n      this.x = parseInt(noteAsString[1]) || 0\r\n      this.y = parseInt(noteAsString[0]) || 0\r\n    }\r\n\r\n    /**\r\n     * The current color of the button.\r\n     * @type {Number}\r\n     */\r\n    this.color = 0\r\n  }\r\n\r\n  /**\r\n   * Set the color of this button.\r\n   * \r\n   * @param {Number} color The note representation of the color.\r\n   * \r\n   * @example\r\n   * var button = launchpad.getButton(0, 0)\r\n   * button.setColor(2)\r\n   * \r\n   * @memberOf Button\r\n   */\r\n  setColor(color) {\r\n    this.launchpad._output.sendMessage([144, this.note, color])\r\n  }\r\n\r\n  /**\r\n   * Pulse a color in and out on a button/\r\n   * \r\n   * @param {Number} color The note representation of the color.\r\n   * \r\n   * @example\r\n   * var button = launchpad.getButton(0, 0)\r\n   * button.pulseColor(2)\r\n   * \r\n   * @memberOf Button\r\n   */\r\n  pulseColor(color) {\r\n    this.launchpad.sendSysEx([40, this.note, color])\r\n  }\r\n\r\n  /**\r\n   * Set a color on the button with RGB values.\r\n   * \r\n   * @param {Number} r Red value. 0-63\r\n   * @param {Number} g Green value. 0-63\r\n   * @param {Number} b Blue value. 0-63\r\n   * \r\n   * @example\r\n   * var button = launchpad.getButton(0, 0)\r\n   * button.setRgbColor(255, 255, 255) // set color to white\r\n   * \r\n   * @memberOf Button\r\n   */\r\n  setRgbColor(r, g, b) {\r\n    this.launchpad.sendSysEx([11, this.note, r, g, b])\r\n  }\r\n\r\n  /**\r\n   * Convenience method for setting the button's color to 0.\r\n   * \r\n   * @example\r\n   * var button = launchpad.getButton(0, 0)\r\n   * button.darken()\r\n   * \r\n   * @memberOf Button\r\n   */\r\n  darken() {\r\n    this.launchpad._output.sendMessage([144, this.note, 0])\r\n  }\r\n}",
+    "static": true,
+    "longname": "src/helpers/button.js",
+    "access": null,
+    "description": null,
+    "lineNumber": 1
+  },
+  {
+    "__docId__": 1,
+    "kind": "class",
+    "name": "Button",
+    "memberof": "src/helpers/button.js",
+    "static": true,
+    "longname": "src/helpers/button.js~Button",
+    "access": null,
+    "export": true,
+    "importPath": "launchpad-mk2/src/helpers/button.js",
+    "importStyle": "Button",
+    "description": "Represents a button on the Launchpad.",
+    "lineNumber": 6,
+    "unknown": [
+      {
+        "tagName": "@class",
+        "tagValue": "Button"
+      }
+    ],
+    "interface": false
+  },
+  {
+    "__docId__": 2,
+    "kind": "constructor",
+    "name": "constructor",
+    "memberof": "src/helpers/button.js~Button",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/helpers/button.js~Button#constructor",
+    "access": null,
+    "description": "Creates an instance of Button. You shouldn't need to use this, Buttons are generated with a Launchpad instance.",
+    "lineNumber": 14,
+    "unknown": [
+      {
+        "tagName": "@memberOf",
+        "tagValue": "Button"
+      }
+    ],
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "Launchpad"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "launchpad",
+        "description": "The Launchpad this button belongs to."
+      },
+      {
+        "nullable": null,
+        "types": [
+          "Number"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "note",
+        "description": "The note representation of the button, used when sending messages to the Launchpad."
+      }
+    ]
+  },
+  {
+    "__docId__": 3,
+    "kind": "member",
+    "name": "launchpad",
+    "memberof": "src/helpers/button.js~Button",
+    "static": false,
+    "longname": "src/helpers/button.js~Button#launchpad",
+    "access": null,
+    "description": "The Launchpad this button belongs to.",
+    "lineNumber": 19,
+    "type": {
+      "nullable": null,
+      "types": [
+        "Launchpad"
+      ],
+      "spread": false,
+      "description": null
+    }
+  },
+  {
+    "__docId__": 4,
+    "kind": "member",
+    "name": "note",
+    "memberof": "src/helpers/button.js~Button",
+    "static": false,
+    "longname": "src/helpers/button.js~Button#note",
+    "access": null,
+    "description": "The note representation of this button.",
+    "lineNumber": 25,
+    "type": {
+      "nullable": null,
+      "types": [
+        "Number"
+      ],
+      "spread": false,
+      "description": null
+    }
+  },
+  {
+    "__docId__": 5,
+    "kind": "member",
+    "name": "x",
+    "memberof": "src/helpers/button.js~Button",
+    "static": false,
+    "longname": "src/helpers/button.js~Button#x",
+    "access": null,
+    "description": "The x-coordinate of this button.",
+    "lineNumber": 33,
+    "type": {
+      "nullable": null,
+      "types": [
+        "Number"
+      ],
+      "spread": false,
+      "description": null
+    }
+  },
+  {
+    "__docId__": 6,
+    "kind": "member",
+    "name": "y",
+    "memberof": "src/helpers/button.js~Button",
+    "static": false,
+    "longname": "src/helpers/button.js~Button#y",
+    "access": null,
+    "description": "The y-coordinate of this button.",
+    "lineNumber": 39,
+    "type": {
+      "nullable": null,
+      "types": [
+        "Number"
+      ],
+      "spread": false,
+      "description": null
+    }
+  },
+  {
+    "__docId__": 7,
+    "kind": "member",
+    "name": "x",
+    "memberof": "src/helpers/button.js~Button",
+    "static": false,
+    "longname": "src/helpers/button.js~Button#x",
+    "access": null,
+    "description": null,
+    "lineNumber": 43,
+    "undocument": true,
+    "unknown": [
+      {
+        "tagName": "@_undocument",
+        "tagValue": ""
+      }
+    ],
+    "type": {
+      "types": [
+        "number"
+      ]
+    }
+  },
+  {
+    "__docId__": 8,
+    "kind": "member",
+    "name": "y",
+    "memberof": "src/helpers/button.js~Button",
+    "static": false,
+    "longname": "src/helpers/button.js~Button#y",
+    "access": null,
+    "description": null,
+    "lineNumber": 44,
+    "undocument": true,
+    "unknown": [
+      {
+        "tagName": "@_undocument",
+        "tagValue": ""
+      }
+    ],
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 9,
+    "kind": "member",
+    "name": "x",
+    "memberof": "src/helpers/button.js~Button",
+    "static": false,
+    "longname": "src/helpers/button.js~Button#x",
+    "access": null,
+    "description": null,
+    "lineNumber": 47,
+    "undocument": true,
+    "unknown": [
+      {
+        "tagName": "@_undocument",
+        "tagValue": ""
+      }
+    ],
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 10,
+    "kind": "member",
+    "name": "y",
+    "memberof": "src/helpers/button.js~Button",
+    "static": false,
+    "longname": "src/helpers/button.js~Button#y",
+    "access": null,
+    "description": null,
+    "lineNumber": 48,
+    "undocument": true,
+    "unknown": [
+      {
+        "tagName": "@_undocument",
+        "tagValue": ""
+      }
+    ],
+    "type": {
+      "types": [
+        "number"
+      ]
+    }
+  },
+  {
+    "__docId__": 11,
+    "kind": "member",
+    "name": "x",
+    "memberof": "src/helpers/button.js~Button",
+    "static": false,
+    "longname": "src/helpers/button.js~Button#x",
+    "access": null,
+    "description": null,
+    "lineNumber": 51,
+    "undocument": true,
+    "unknown": [
+      {
+        "tagName": "@_undocument",
+        "tagValue": ""
+      }
+    ],
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 12,
+    "kind": "member",
+    "name": "y",
+    "memberof": "src/helpers/button.js~Button",
+    "static": false,
+    "longname": "src/helpers/button.js~Button#y",
+    "access": null,
+    "description": null,
+    "lineNumber": 52,
+    "undocument": true,
+    "unknown": [
+      {
+        "tagName": "@_undocument",
+        "tagValue": ""
+      }
+    ],
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 13,
+    "kind": "member",
+    "name": "color",
+    "memberof": "src/helpers/button.js~Button",
+    "static": false,
+    "longname": "src/helpers/button.js~Button#color",
+    "access": null,
+    "description": "The current color of the button.",
+    "lineNumber": 59,
+    "type": {
+      "nullable": null,
+      "types": [
+        "Number"
+      ],
+      "spread": false,
+      "description": null
+    }
+  },
+  {
+    "__docId__": 14,
+    "kind": "method",
+    "name": "setColor",
+    "memberof": "src/helpers/button.js~Button",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/helpers/button.js~Button#setColor",
+    "access": null,
+    "description": "Set the color of this button.",
+    "examples": [
+      "var button = launchpad.getButton(0, 0)\nbutton.setColor(2)"
+    ],
+    "lineNumber": 73,
+    "unknown": [
+      {
+        "tagName": "@memberOf",
+        "tagValue": "Button"
+      }
+    ],
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "Number"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "color",
+        "description": "The note representation of the color."
+      }
+    ]
+  },
+  {
+    "__docId__": 15,
+    "kind": "method",
+    "name": "pulseColor",
+    "memberof": "src/helpers/button.js~Button",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/helpers/button.js~Button#pulseColor",
+    "access": null,
+    "description": "Pulse a color in and out on a button/",
+    "examples": [
+      "var button = launchpad.getButton(0, 0)\nbutton.pulseColor(2)"
+    ],
+    "lineNumber": 88,
+    "unknown": [
+      {
+        "tagName": "@memberOf",
+        "tagValue": "Button"
+      }
+    ],
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "Number"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "color",
+        "description": "The note representation of the color."
+      }
+    ]
+  },
+  {
+    "__docId__": 16,
+    "kind": "method",
+    "name": "setRgbColor",
+    "memberof": "src/helpers/button.js~Button",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/helpers/button.js~Button#setRgbColor",
+    "access": null,
+    "description": "Set a color on the button with RGB values.",
+    "examples": [
+      "var button = launchpad.getButton(0, 0)\nbutton.setRgbColor(255, 255, 255) // set color to white"
+    ],
+    "lineNumber": 105,
+    "unknown": [
+      {
+        "tagName": "@memberOf",
+        "tagValue": "Button"
+      }
+    ],
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "Number"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "r",
+        "description": "Red value. 0-63"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "Number"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "g",
+        "description": "Green value. 0-63"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "Number"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "b",
+        "description": "Blue value. 0-63"
+      }
+    ]
+  },
+  {
+    "__docId__": 17,
+    "kind": "method",
+    "name": "darken",
+    "memberof": "src/helpers/button.js~Button",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/helpers/button.js~Button#darken",
+    "access": null,
+    "description": "Convenience method for setting the button's color to 0.",
+    "examples": [
+      "var button = launchpad.getButton(0, 0)\nbutton.darken()"
+    ],
+    "lineNumber": 118,
+    "unknown": [
+      {
+        "tagName": "@memberOf",
+        "tagValue": "Button"
+      }
+    ],
+    "params": []
+  },
+  {
+    "__docId__": 18,
+    "kind": "file",
+    "name": "src/index.js",
+    "content": "const midi = require('midi'),\r\n      Button = require('./helpers/button'),\r\n      EventEmitter = require('events'),\r\n      util = require('util')\r\n\r\nvar layouts = {\r\n  NOTE: 0,\r\n  DRUM: 1,\r\n  FADE: 2,\r\n  PROGRAMMER: 3\r\n}\r\n\r\n/**\r\n * A Launchpad instance.\r\n * \r\n * @class Launchpad\r\n * @extends {EventEmitter}\r\n */\r\nexport default class Launchpad extends EventEmitter {\r\n  /**\r\n   * Creates an instance of Launchpad.\r\n   * \r\n   * @param {Object} params The paramaters to instantiate the Launchpad.\r\n   * @param {Number} params.in The input port of the Launchpad.\r\n   * @param {Number} params.out The output port of the Launchpad.\r\n   * \r\n   * @example\r\n   * let myLaunchpad = new Launchpad({\r\n   *   in: 1,\r\n   *   out: 1\r\n   * })\r\n   * \r\n   * @memberOf Launchpad\r\n   */\r\n  constructor(params) {\r\n    super()\r\n\r\n    /**\r\n     * All the buttons on this Launchpad. Get one by using `getButton`.\r\n     * @type {Button[]}\r\n     */\r\n    this.buttons = [ ]\r\n    \r\n    this._input = new midi.input()\r\n    this._output = new midi.output()\r\n\r\n    this._input.openPort(params.in)\r\n\r\n    this._input.on(\"message\", (dTime, message) => {\r\n      if(message[0] === 176 || message[0] === 144){\r\n        // button message\r\n        if(message[2] > 0)\r\n          this.emit(\"press\", this.buttons[message[1]], message[2])\r\n        else\r\n          this.emit(\"release\", this.buttons[message[1]])\r\n      }\r\n    })\r\n\r\n    this._output.openPort(params.out)\r\n\r\n    for(var i=0;i<100;i++)\r\n      this.buttons.push(new Button(self, i))\r\n  }\r\n\r\n  /**\r\n   * Convenience method to add the system-exclusive message header to a message\r\n   * and then send it to the Launchpad.\r\n   * \r\n   * @param {Number[]} bytes The bytes of the SysEx message to send. Header is automatically included.\r\n   * \r\n   * @example\r\n   * myLaunchpad.sendSysEx([0, 1, 2, 3])\r\n   * \r\n   * @memberOf Launchpad\r\n   */\r\n  sendSysEx(bytes){\r\n    // sysex header\r\n    var message = [240, 0, 32, 41, 2, 16]\r\n    // sysex message\r\n    bytes.forEach(byte => message.push(byte))\r\n    // sysex terminator\r\n    message.push(247)\r\n    // console.log(\"sysex\", message)\r\n    this._output.sendMessage(message)\r\n  }\r\n\r\n  /**\r\n   * Get a button on this Launchpad\r\n   * \r\n   * @param {Number} x The x-coordinate of the button.\r\n   * @param {Number} y The y-coordinate of the button.\r\n   * @returns {Button}\r\n   * \r\n   * @example\r\n   * let button = myLaunchpad.getButton(1, 2)\r\n   * \r\n   * // do whatever with the button\r\n   * button.setRgbColor(10, 30, 10)\r\n   * \r\n   * @memberOf Launchpad\r\n   */\r\n  getButton(x, y) {\r\n    return this.buttons[(x.toString() === \"0\" ? \"\" : x.toString()) + y.toString()]\r\n  }\r\n\r\n  /**\r\n   * Convenience method to light up all the buttons on the Launchpad a certain color.\r\n   * \r\n   * @param {Number} color Note representation of the color.\r\n   * \r\n   * @example\r\n   * myLaunchpad.lightAll(23)\r\n   * \r\n   * @memberOf Launchpad\r\n   */\r\n  lightAll(color) {\r\n    this.sendSysEx([14, color])\r\n  }\r\n\r\n  /**\r\n   * Convenience method to light up all the buttons on the Launchpad a certain color with RGB values.\r\n   * \r\n   * @param {Number} r Red value. 0-63\r\n   * @param {Number} g Green value. 0-63\r\n   * @param {Number} b Blue value. 0-63\r\n   * \r\n   * @example\r\n   * myLaunchpad.lightAllRgb(10, 30, 10)\r\n   * \r\n   * @memberOf Launchpad\r\n   */\r\n  lightAllRgb(r, g, b) {\r\n    this.buttons.forEach(button => button.setRgbColor(r, g, b))\r\n  }\r\n\r\n  /**\r\n   * Convenience method to darken all buttons on the Launchpad.\r\n   * \r\n   * @example\r\n   * myLaunchpad.darkAll()\r\n   * \r\n   * @memberOf Launchpad\r\n   */\r\n  darkAll() {\r\n    this.buttons.forEach(button => button.setColor(0))\r\n  }\r\n\r\n  /**\r\n   * Set the Launchpad's layout.\r\n   * \r\n   * @param {String} layout The layout you want to switch to. Can be one of _NOTE, DRUM, FADER, PROGRAMMER_.\r\n   * \r\n   * @example\r\n   * myLaunchpad.toLayout(\"PROGRAMMER\")\r\n   * \r\n   * @memberOf Launchpad\r\n   */\r\n  toLayout(layout) {\r\n    this._output.sendMessage([240, 0, 32, 41, 2, 16, 44, layouts[layout], 247])\r\n  }\r\n\r\n  /**\r\n   * Scroll text across the Launchpad.\r\n   * \r\n   * @param {String} text The text to scroll.\r\n   * @param {Number} color Note representation of the text color.\r\n   * @param {Boolean} loop If true, will loop the text scrolling until another text scroll message is sent.\r\n   * @param {Number} speed The speed of the text scrolling. 1-7\r\n   * \r\n   * @example\r\n   * myLaunchpad.scrollText(\"Hello node!\", 23, true, 5)\r\n   * \r\n   * @memberOf Launchpad\r\n   */\r\n  scrollText(text, color, loop, speed) {\r\n    var message = [20, color, loop]\r\n\r\n    loop = loop ? 1 : 0\r\n\r\n    for(var i=0;i<text.length;i++)\r\n      message.push(text.charCodeAt(i))\r\n    \r\n    this.sendSysEx(message)\r\n    if(speed) this.sendSysEx([20, color, loop, speed])\r\n  }\r\n}",
+    "static": true,
+    "longname": "src/index.js",
+    "access": null,
+    "description": null,
+    "lineNumber": 1
+  },
+  {
+    "__docId__": 19,
+    "kind": "variable",
+    "name": "midi",
+    "memberof": "src/index.js",
+    "static": true,
+    "longname": "src/index.js~midi",
+    "access": null,
+    "export": false,
+    "importPath": "launchpad-mk2",
+    "importStyle": null,
+    "description": null,
+    "lineNumber": 1,
+    "undocument": true,
+    "unknown": [
+      {
+        "tagName": "@_undocument",
+        "tagValue": ""
+      }
+    ],
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 20,
+    "kind": "variable",
+    "name": "layouts",
+    "memberof": "src/index.js",
+    "static": true,
+    "longname": "src/index.js~layouts",
+    "access": null,
+    "export": false,
+    "importPath": "launchpad-mk2",
+    "importStyle": null,
+    "description": null,
+    "lineNumber": 6,
+    "undocument": true,
+    "unknown": [
+      {
+        "tagName": "@_undocument",
+        "tagValue": ""
+      }
+    ],
+    "type": {
+      "types": [
+        "{\"NOTE\": *, \"DRUM\": number, \"FADE\": number, \"PROGRAMMER\": number}"
+      ]
+    }
+  },
+  {
+    "__docId__": 21,
+    "kind": "class",
+    "name": "Launchpad",
+    "memberof": "src/index.js",
+    "static": true,
+    "longname": "src/index.js~Launchpad",
+    "access": null,
+    "export": true,
+    "importPath": "launchpad-mk2",
+    "importStyle": "Launchpad",
+    "description": "A Launchpad instance.",
+    "lineNumber": 19,
+    "unknown": [
+      {
+        "tagName": "@class",
+        "tagValue": "Launchpad"
+      }
+    ],
+    "interface": false,
+    "extends": [
+      "EventEmitter"
+    ]
+  },
+  {
+    "__docId__": 22,
+    "kind": "constructor",
+    "name": "constructor",
+    "memberof": "src/index.js~Launchpad",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/index.js~Launchpad#constructor",
+    "access": null,
+    "description": "Creates an instance of Launchpad.",
+    "examples": [
+      "let myLaunchpad = new Launchpad({\n  in: 1,\n  out: 1\n})"
+    ],
+    "lineNumber": 35,
+    "unknown": [
+      {
+        "tagName": "@memberOf",
+        "tagValue": "Launchpad"
+      }
+    ],
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "Object"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "params",
+        "description": "The paramaters to instantiate the Launchpad."
+      },
+      {
+        "nullable": null,
+        "types": [
+          "Number"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "params.in",
+        "description": "The input port of the Launchpad."
+      },
+      {
+        "nullable": null,
+        "types": [
+          "Number"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "params.out",
+        "description": "The output port of the Launchpad."
+      }
+    ]
+  },
+  {
+    "__docId__": 23,
+    "kind": "member",
+    "name": "buttons",
+    "memberof": "src/index.js~Launchpad",
+    "static": false,
+    "longname": "src/index.js~Launchpad#buttons",
+    "access": null,
+    "description": "All the buttons on this Launchpad. Get one by using `getButton`.",
+    "lineNumber": 42,
+    "type": {
+      "nullable": null,
+      "types": [
+        "Button[]"
+      ],
+      "spread": false,
+      "description": null
+    }
+  },
+  {
+    "__docId__": 24,
+    "kind": "member",
+    "name": "_input",
+    "memberof": "src/index.js~Launchpad",
+    "static": false,
+    "longname": "src/index.js~Launchpad#_input",
+    "access": null,
+    "description": null,
+    "lineNumber": 44,
+    "undocument": true,
+    "unknown": [
+      {
+        "tagName": "@_undocument",
+        "tagValue": ""
+      }
+    ],
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 25,
+    "kind": "member",
+    "name": "_output",
+    "memberof": "src/index.js~Launchpad",
+    "static": false,
+    "longname": "src/index.js~Launchpad#_output",
+    "access": null,
+    "description": null,
+    "lineNumber": 45,
+    "undocument": true,
+    "unknown": [
+      {
+        "tagName": "@_undocument",
+        "tagValue": ""
+      }
+    ],
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 26,
+    "kind": "method",
+    "name": "sendSysEx",
+    "memberof": "src/index.js~Launchpad",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/index.js~Launchpad#sendSysEx",
+    "access": null,
+    "description": "Convenience method to add the system-exclusive message header to a message\nand then send it to the Launchpad.",
+    "examples": [
+      "myLaunchpad.sendSysEx([0, 1, 2, 3])"
+    ],
+    "lineNumber": 76,
+    "unknown": [
+      {
+        "tagName": "@memberOf",
+        "tagValue": "Launchpad"
+      }
+    ],
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "Number[]"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "bytes",
+        "description": "The bytes of the SysEx message to send. Header is automatically included."
+      }
+    ]
+  },
+  {
+    "__docId__": 27,
+    "kind": "method",
+    "name": "getButton",
+    "memberof": "src/index.js~Launchpad",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/index.js~Launchpad#getButton",
+    "access": null,
+    "description": "Get a button on this Launchpad",
+    "examples": [
+      "let button = myLaunchpad.getButton(1, 2)\n\n// do whatever with the button\nbutton.setRgbColor(10, 30, 10)"
+    ],
+    "lineNumber": 102,
+    "unknown": [
+      {
+        "tagName": "@returns",
+        "tagValue": "{Button}"
+      },
+      {
+        "tagName": "@memberOf",
+        "tagValue": "Launchpad"
+      }
+    ],
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "Number"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "x",
+        "description": "The x-coordinate of the button."
+      },
+      {
+        "nullable": null,
+        "types": [
+          "Number"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "y",
+        "description": "The y-coordinate of the button."
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "Button"
+      ],
+      "spread": false,
+      "description": ""
+    }
+  },
+  {
+    "__docId__": 28,
+    "kind": "method",
+    "name": "lightAll",
+    "memberof": "src/index.js~Launchpad",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/index.js~Launchpad#lightAll",
+    "access": null,
+    "description": "Convenience method to light up all the buttons on the Launchpad a certain color.",
+    "examples": [
+      "myLaunchpad.lightAll(23)"
+    ],
+    "lineNumber": 116,
+    "unknown": [
+      {
+        "tagName": "@memberOf",
+        "tagValue": "Launchpad"
+      }
+    ],
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "Number"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "color",
+        "description": "Note representation of the color."
+      }
+    ]
+  },
+  {
+    "__docId__": 29,
+    "kind": "method",
+    "name": "lightAllRgb",
+    "memberof": "src/index.js~Launchpad",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/index.js~Launchpad#lightAllRgb",
+    "access": null,
+    "description": "Convenience method to light up all the buttons on the Launchpad a certain color with RGB values.",
+    "examples": [
+      "myLaunchpad.lightAllRgb(10, 30, 10)"
+    ],
+    "lineNumber": 132,
+    "unknown": [
+      {
+        "tagName": "@memberOf",
+        "tagValue": "Launchpad"
+      }
+    ],
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "Number"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "r",
+        "description": "Red value. 0-63"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "Number"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "g",
+        "description": "Green value. 0-63"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "Number"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "b",
+        "description": "Blue value. 0-63"
+      }
+    ]
+  },
+  {
+    "__docId__": 30,
+    "kind": "method",
+    "name": "darkAll",
+    "memberof": "src/index.js~Launchpad",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/index.js~Launchpad#darkAll",
+    "access": null,
+    "description": "Convenience method to darken all buttons on the Launchpad.",
+    "examples": [
+      "myLaunchpad.darkAll()"
+    ],
+    "lineNumber": 144,
+    "unknown": [
+      {
+        "tagName": "@memberOf",
+        "tagValue": "Launchpad"
+      }
+    ],
+    "params": []
+  },
+  {
+    "__docId__": 31,
+    "kind": "method",
+    "name": "toLayout",
+    "memberof": "src/index.js~Launchpad",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/index.js~Launchpad#toLayout",
+    "access": null,
+    "description": "Set the Launchpad's layout.",
+    "examples": [
+      "myLaunchpad.toLayout(\"PROGRAMMER\")"
+    ],
+    "lineNumber": 158,
+    "unknown": [
+      {
+        "tagName": "@memberOf",
+        "tagValue": "Launchpad"
+      }
+    ],
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "String"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "layout",
+        "description": "The layout you want to switch to. Can be one of _NOTE, DRUM, FADER, PROGRAMMER_."
+      }
+    ]
+  },
+  {
+    "__docId__": 32,
+    "kind": "method",
+    "name": "scrollText",
+    "memberof": "src/index.js~Launchpad",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/index.js~Launchpad#scrollText",
+    "access": null,
+    "description": "Scroll text across the Launchpad.",
+    "examples": [
+      "myLaunchpad.scrollText(\"Hello node!\", 23, true, 5)"
+    ],
+    "lineNumber": 175,
+    "unknown": [
+      {
+        "tagName": "@memberOf",
+        "tagValue": "Launchpad"
+      }
+    ],
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "String"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "text",
+        "description": "The text to scroll."
+      },
+      {
+        "nullable": null,
+        "types": [
+          "Number"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "color",
+        "description": "Note representation of the text color."
+      },
+      {
+        "nullable": null,
+        "types": [
+          "Boolean"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "loop",
+        "description": "If true, will loop the text scrolling until another text scroll message is sent."
+      },
+      {
+        "nullable": null,
+        "types": [
+          "Number"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "speed",
+        "description": "The speed of the text scrolling. 1-7"
+      }
+    ]
+  },
+  {
+    "__docId__": 34,
+    "kind": "external",
+    "name": "Infinity",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Infinity",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Infinity",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 35,
+    "kind": "external",
+    "name": "NaN",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/NaN",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~NaN",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 36,
+    "kind": "external",
+    "name": "undefined",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/undefined",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~undefined",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 37,
+    "kind": "external",
+    "name": "null",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/null",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~null",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 38,
+    "kind": "external",
+    "name": "Object",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Object",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 39,
+    "kind": "external",
+    "name": "object",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~object",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 40,
+    "kind": "external",
+    "name": "Function",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Function",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 41,
+    "kind": "external",
+    "name": "function",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~function",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 42,
+    "kind": "external",
+    "name": "Boolean",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Boolean",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 43,
+    "kind": "external",
+    "name": "boolean",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~boolean",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 44,
+    "kind": "external",
+    "name": "Symbol",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Symbol",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Symbol",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 45,
+    "kind": "external",
+    "name": "Error",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Error",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 46,
+    "kind": "external",
+    "name": "EvalError",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/EvalError",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~EvalError",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 47,
+    "kind": "external",
+    "name": "InternalError",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/InternalError",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~InternalError",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 48,
+    "kind": "external",
+    "name": "RangeError",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RangeError",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~RangeError",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 49,
+    "kind": "external",
+    "name": "ReferenceError",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ReferenceError",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~ReferenceError",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 50,
+    "kind": "external",
+    "name": "SyntaxError",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/SyntaxError",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~SyntaxError",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 51,
+    "kind": "external",
+    "name": "TypeError",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypeError",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~TypeError",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 52,
+    "kind": "external",
+    "name": "URIError",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/URIError",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~URIError",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 53,
+    "kind": "external",
+    "name": "Number",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Number",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 54,
+    "kind": "external",
+    "name": "number",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~number",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 55,
+    "kind": "external",
+    "name": "Date",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Date",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 56,
+    "kind": "external",
+    "name": "String",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~String",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 57,
+    "kind": "external",
+    "name": "string",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~string",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 58,
+    "kind": "external",
+    "name": "RegExp",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~RegExp",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 59,
+    "kind": "external",
+    "name": "Array",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Array",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 60,
+    "kind": "external",
+    "name": "Int8Array",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int8Array",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Int8Array",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 61,
+    "kind": "external",
+    "name": "Uint8Array",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint8Array",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Uint8Array",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 62,
+    "kind": "external",
+    "name": "Uint8ClampedArray",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint8ClampedArray",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Uint8ClampedArray",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 63,
+    "kind": "external",
+    "name": "Int16Array",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int16Array",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Int16Array",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 64,
+    "kind": "external",
+    "name": "Uint16Array",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint16Array",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Uint16Array",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 65,
+    "kind": "external",
+    "name": "Int32Array",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Int32Array",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 66,
+    "kind": "external",
+    "name": "Uint32Array",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint32Array",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Uint32Array",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 67,
+    "kind": "external",
+    "name": "Float32Array",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Float32Array",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 68,
+    "kind": "external",
+    "name": "Float64Array",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Float64Array",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 69,
+    "kind": "external",
+    "name": "Map",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Map",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 70,
+    "kind": "external",
+    "name": "Set",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Set",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 71,
+    "kind": "external",
+    "name": "WeakMap",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakMap",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~WeakMap",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 72,
+    "kind": "external",
+    "name": "WeakSet",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakSet",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~WeakSet",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 73,
+    "kind": "external",
+    "name": "ArrayBuffer",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~ArrayBuffer",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 74,
+    "kind": "external",
+    "name": "DataView",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/DataView",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~DataView",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 75,
+    "kind": "external",
+    "name": "JSON",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~JSON",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 76,
+    "kind": "external",
+    "name": "Promise",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Promise",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 77,
+    "kind": "external",
+    "name": "Generator",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Generator",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Generator",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 78,
+    "kind": "external",
+    "name": "GeneratorFunction",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/GeneratorFunction",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~GeneratorFunction",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 79,
+    "kind": "external",
+    "name": "Reflect",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Reflect",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Reflect",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 80,
+    "kind": "external",
+    "name": "Proxy",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Proxy",
+    "access": null,
+    "description": "",
+    "lineNumber": 193,
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 82,
+    "kind": "external",
+    "name": "CanvasRenderingContext2D",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D",
+    "memberof": "BuiltinExternal/WebAPIExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/WebAPIExternal.js~CanvasRenderingContext2D",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 83,
+    "kind": "external",
+    "name": "DocumentFragment",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/API/DocumentFragment",
+    "memberof": "BuiltinExternal/WebAPIExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/WebAPIExternal.js~DocumentFragment",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 84,
+    "kind": "external",
+    "name": "Element",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/API/Element",
+    "memberof": "BuiltinExternal/WebAPIExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/WebAPIExternal.js~Element",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 85,
+    "kind": "external",
+    "name": "Event",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/API/Event",
+    "memberof": "BuiltinExternal/WebAPIExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/WebAPIExternal.js~Event",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 86,
+    "kind": "external",
+    "name": "Node",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/API/Node",
+    "memberof": "BuiltinExternal/WebAPIExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/WebAPIExternal.js~Node",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 87,
+    "kind": "external",
+    "name": "NodeList",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/API/NodeList",
+    "memberof": "BuiltinExternal/WebAPIExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/WebAPIExternal.js~NodeList",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 88,
+    "kind": "external",
+    "name": "XMLHttpRequest",
+    "externalLink": "https://developer.mozilla.org/en/docs/Web/API/XMLHttpRequest",
+    "memberof": "BuiltinExternal/WebAPIExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/WebAPIExternal.js~XMLHttpRequest",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 89,
+    "kind": "external",
+    "name": "AudioContext",
+    "externalLink": "https://developer.mozilla.org/en/docs/Web/API/AudioContext",
+    "memberof": "BuiltinExternal/WebAPIExternal.js",
+    "static": true,
+    "longname": "BuiltinExternal/WebAPIExternal.js~AudioContext",
+    "access": null,
+    "description": "",
+    "lineNumber": 34,
+    "builtinExternal": true
+  }
+]

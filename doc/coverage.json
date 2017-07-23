@@ -1,0 +1,17 @@
+{
+  "coverage": "100%",
+  "expectCount": 21,
+  "actualCount": 21,
+  "files": {
+    "src/helpers/button.js": {
+      "expectCount": 11,
+      "actualCount": 11,
+      "undocumentLines": []
+    },
+    "src/index.js": {
+      "expectCount": 10,
+      "actualCount": 10,
+      "undocumentLines": []
+    }
+  }
+}

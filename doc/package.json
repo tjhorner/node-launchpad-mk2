@@ -1,0 +1,15 @@
+{
+  "name": "launchpad-mk2",
+  "version": "2.0.0",
+  "description": "Node module for interfacing with the Launchpad MK2 and Launchpad Pro",
+  "repository": "https://github.com/tjhorner/node-launchpad-mk2",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "TJ Horner <me@tjhorner.com>",
+  "license": "ISC",
+  "dependencies": {
+    "midi": "^0.9.4"
+  }
+}

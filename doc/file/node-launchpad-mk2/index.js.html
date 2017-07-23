@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../">
+  <title data-ice="title">node-launchpad-mk2/index.js | API Document</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  
+  
+  <script src="script/manual.js"></script>
+</head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  <a data-ice="repoURL" href="https://github.com/tjhorner/node-launchpad-mk2" class="repo-url-github">Repository</a>
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  </ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">node-launchpad-mk2/index.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">const midi = require(&apos;midi&apos;),
+      Button = require(&apos;./helpers/button&apos;),
+      EventEmitter = require(&apos;events&apos;),
+      util = require(&apos;util&apos;)
+
+var layouts = {
+  NOTE: 0,
+  DRUM: 1,
+  FADE: 2,
+  PROGRAMMER: 3
+}
+
+/**
+ * A Launchpad instance.
+ * 
+ * @class Launchpad
+ * @extends {EventEmitter}
+ */
+class Launchpad extends EventEmitter {
+  /**
+   * Creates an instance of Launchpad.
+   * 
+   * @param {Object} params The paramaters to instantiate the Launchpad.
+   * @param {Number} params.in The input port of the Launchpad.
+   * @param {Number} params.out The output port of the Launchpad.
+   * 
+   * @memberOf Launchpad
+   */
+  constructor(params) {
+    super()
+
+    this.buttons = [ ]
+    
+    this._input = new midi.input()
+    this._output = new midi.output()
+
+    this._input.openPort(params.in)
+
+    this._input.on(&quot;message&quot;, (dTime, message) =&gt; {
+      if(message[0] === 176 || message[0] === 144){
+        // button message
+        if(message[2] &gt; 0)
+          this.emit(&quot;press&quot;, this.buttons[message[1]], message[2])
+        else
+          this.emit(&quot;release&quot;, this.buttons[message[1]])
+      }
+    })
+
+    this._output.openPort(params.out)
+
+    for(var i=0;i&lt;100;i++)
+      this.buttons.push(new Button(self, i))
+  }
+
+  /**
+   * Convenience method to add the system-exclusive message header to a message
+   * and then send it to the Launchpad
+   * 
+   * @param {Number[]} bytes The bytes of the SysEx message to send. Header is automatically included.
+   * 
+   * @memberOf Launchpad
+   */
+  asendSysEx(bytes){
+    // sysex header
+    var message = [240, 0, 32, 41, 2, 16]
+    // sysex message
+    bytes.forEach(byte =&gt; message.push(byte))
+    // sysex terminator
+    message.push(247)
+    // console.log(&quot;sysex&quot;, message)
+    this._output.sendMessage(message)
+  }
+
+  /**
+   * Get a button on this Launchpad
+   * 
+   * @param {Number} x The x-coordinate of the button.
+   * @param {Number} y The y-coordinate of the button.
+   * @returns {Button}
+   * 
+   * @memberOf Launchpad
+   */
+  getButton(x, y) {
+    return this.buttons[(x.toString() === &quot;0&quot; ? &quot;&quot; : x.toString()) + y.toString()]
+  }
+
+  /**
+   * Convenience method to light up all the buttons on the Launchpad a certain color.
+   * 
+   * @param {Number} color Note representation of the color.
+   * 
+   * @memberOf Launchpad
+   */
+  lightAll(color) {
+    this.sendSysEx([14, color])
+  }
+
+  /**
+   * Convenience method to light up all the buttons on the Launchpad a certain color with RGB values.
+   * 
+   * @param {Number} r Red value. 0-63
+   * @param {Number} g Green value. 0-63
+   * @param {Number} b Blue value. 0-63
+   * 
+   * @memberOf Launchpad
+   */
+  lightAllRgb(r, g, b) {
+    this.buttons.forEach(button =&gt; button.setRgbColor(r, g, b))
+  }
+
+  /**
+   * Convenience method to darken all buttons on the Launchpad.
+   * 
+   * @memberOf Launchpad
+   */
+  darkAll() {
+    this.buttons.forEach(button =&gt; button.setColor(0))
+  }
+
+  /**
+   * Set the Launchpad&apos;s layout.
+   * 
+   * @param {String} layout The layout you want to switch to. Can be one of _NOTE, DRUM, FADER, PROGRAMMER_.
+   * 
+   * @memberOf Launchpad
+   */
+  toLayout(layout) {
+    this._output.sendMessage([240, 0, 32, 41, 2, 16, 44, layouts[layout], 247])
+  }
+
+  /**
+   * Scroll text across the Launchpad.
+   * 
+   * @param {String} text The text to scroll.
+   * @param {Number} color Note representation of the text color.
+   * @param {Boolean} loop If true, will loop the text scrolling until another text scroll message is sent.
+   * @param {Number} speed The speed of the text scrolling. 1-7
+   * 
+   * @memberOf Launchpad
+   */
+  scrollText(text, color, loop, speed) {
+    var message = [20, color, loop]
+
+    loop = loop ? 1 : 0
+
+    for(var i=0;i&lt;text.length;i++)
+      message.push(text.charCodeAt(i))
+    
+    this.sendSysEx(message)
+    if(speed) this.sendSysEx([20, color, loop, speed])
+  }
+}
+
+module.exports = Launchpad</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(0.5.2)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>
