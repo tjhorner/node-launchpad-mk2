@@ -1,5 +1,7 @@
 # launchpad-mk2
 
+[Documentation](https://tjhorner.com/node-launchpad-mk2/)
+
 A node module for interacting with the Launchpad Pro.
 
 If you're looking for a module to interact with the original Launchpad or Launchpad S, check [here](https://www.npmjs.com/package/midi-launchpad).
