@@ -454,7 +454,7 @@
     "__docId__": 18,
     "kind": "file",
     "name": "src/index.js",
-    "content": "const midi = require('midi'),\r\n      Button = require('./helpers/button'),\r\n      EventEmitter = require('events'),\r\n      util = require('util')\r\n\r\nvar layouts = {\r\n  NOTE: 0,\r\n  DRUM: 1,\r\n  FADE: 2,\r\n  PROGRAMMER: 3\r\n}\r\n\r\n/**\r\n * A Launchpad instance.\r\n * \r\n * @class Launchpad\r\n * @extends {EventEmitter}\r\n */\r\nexport default class Launchpad extends EventEmitter {\r\n  /**\r\n   * Creates an instance of Launchpad.\r\n   * \r\n   * @param {Object} params The paramaters to instantiate the Launchpad.\r\n   * @param {Number} params.in The input port of the Launchpad.\r\n   * @param {Number} params.out The output port of the Launchpad.\r\n   * \r\n   * @example\r\n   * let myLaunchpad = new Launchpad({\r\n   *   in: 1,\r\n   *   out: 1\r\n   * })\r\n   * \r\n   * @memberOf Launchpad\r\n   */\r\n  constructor(params) {\r\n    super()\r\n\r\n    /**\r\n     * All the buttons on this Launchpad. Get one by using `getButton`.\r\n     * @type {Button[]}\r\n     */\r\n    this.buttons = [ ]\r\n    \r\n    this._input = new midi.input()\r\n    this._output = new midi.output()\r\n\r\n    this._input.openPort(params.in)\r\n\r\n    this._input.on(\"message\", (dTime, message) => {\r\n      if(message[0] === 176 || message[0] === 144){\r\n        // button message\r\n        if(message[2] > 0)\r\n          this.emit(\"press\", this.buttons[message[1]], message[2])\r\n        else\r\n          this.emit(\"release\", this.buttons[message[1]])\r\n      }\r\n    })\r\n\r\n    this._output.openPort(params.out)\r\n\r\n    for(var i=0;i<100;i++)\r\n      this.buttons.push(new Button(self, i))\r\n  }\r\n\r\n  /**\r\n   * Convenience method to add the system-exclusive message header to a message\r\n   * and then send it to the Launchpad.\r\n   * \r\n   * @param {Number[]} bytes The bytes of the SysEx message to send. Header is automatically included.\r\n   * \r\n   * @example\r\n   * myLaunchpad.sendSysEx([0, 1, 2, 3])\r\n   * \r\n   * @memberOf Launchpad\r\n   */\r\n  sendSysEx(bytes){\r\n    // sysex header\r\n    var message = [240, 0, 32, 41, 2, 16]\r\n    // sysex message\r\n    bytes.forEach(byte => message.push(byte))\r\n    // sysex terminator\r\n    message.push(247)\r\n    // console.log(\"sysex\", message)\r\n    this._output.sendMessage(message)\r\n  }\r\n\r\n  /**\r\n   * Get a button on this Launchpad\r\n   * \r\n   * @param {Number} x The x-coordinate of the button.\r\n   * @param {Number} y The y-coordinate of the button.\r\n   * @returns {Button}\r\n   * \r\n   * @example\r\n   * let button = myLaunchpad.getButton(1, 2)\r\n   * \r\n   * // do whatever with the button\r\n   * button.setRgbColor(10, 30, 10)\r\n   * \r\n   * @memberOf Launchpad\r\n   */\r\n  getButton(x, y) {\r\n    return this.buttons[(x.toString() === \"0\" ? \"\" : x.toString()) + y.toString()]\r\n  }\r\n\r\n  /**\r\n   * Convenience method to light up all the buttons on the Launchpad a certain color.\r\n   * \r\n   * @param {Number} color Note representation of the color.\r\n   * \r\n   * @example\r\n   * myLaunchpad.lightAll(23)\r\n   * \r\n   * @memberOf Launchpad\r\n   */\r\n  lightAll(color) {\r\n    this.sendSysEx([14, color])\r\n  }\r\n\r\n  /**\r\n   * Convenience method to light up all the buttons on the Launchpad a certain color with RGB values.\r\n   * \r\n   * @param {Number} r Red value. 0-63\r\n   * @param {Number} g Green value. 0-63\r\n   * @param {Number} b Blue value. 0-63\r\n   * \r\n   * @example\r\n   * myLaunchpad.lightAllRgb(10, 30, 10)\r\n   * \r\n   * @memberOf Launchpad\r\n   */\r\n  lightAllRgb(r, g, b) {\r\n    this.buttons.forEach(button => button.setRgbColor(r, g, b))\r\n  }\r\n\r\n  /**\r\n   * Convenience method to darken all buttons on the Launchpad.\r\n   * \r\n   * @example\r\n   * myLaunchpad.darkAll()\r\n   * \r\n   * @memberOf Launchpad\r\n   */\r\n  darkAll() {\r\n    this.buttons.forEach(button => button.setColor(0))\r\n  }\r\n\r\n  /**\r\n   * Set the Launchpad's layout.\r\n   * \r\n   * @param {String} layout The layout you want to switch to. Can be one of _NOTE, DRUM, FADER, PROGRAMMER_.\r\n   * \r\n   * @example\r\n   * myLaunchpad.toLayout(\"PROGRAMMER\")\r\n   * \r\n   * @memberOf Launchpad\r\n   */\r\n  toLayout(layout) {\r\n    this._output.sendMessage([240, 0, 32, 41, 2, 16, 44, layouts[layout], 247])\r\n  }\r\n\r\n  /**\r\n   * Scroll text across the Launchpad.\r\n   * \r\n   * @param {String} text The text to scroll.\r\n   * @param {Number} color Note representation of the text color.\r\n   * @param {Boolean} loop If true, will loop the text scrolling until another text scroll message is sent.\r\n   * @param {Number} speed The speed of the text scrolling. 1-7\r\n   * \r\n   * @example\r\n   * myLaunchpad.scrollText(\"Hello node!\", 23, true, 5)\r\n   * \r\n   * @memberOf Launchpad\r\n   */\r\n  scrollText(text, color, loop, speed) {\r\n    var message = [20, color, loop]\r\n\r\n    loop = loop ? 1 : 0\r\n\r\n    for(var i=0;i<text.length;i++)\r\n      message.push(text.charCodeAt(i))\r\n    \r\n    this.sendSysEx(message)\r\n    if(speed) this.sendSysEx([20, color, loop, speed])\r\n  }\r\n}",
+    "content": "const midi = require('midi'),\r\n      Button = require('./helpers/button'),\r\n      EventEmitter = require('events'),\r\n      util = require('util')\r\n\r\nvar layouts = {\r\n  NOTE: 0,\r\n  DRUM: 1,\r\n  FADE: 2,\r\n  PROGRAMMER: 3\r\n}\r\n\r\n/**\r\n * A Launchpad instance.\r\n * \r\n * This class will emit two events:\r\n * \r\n * - `press` - Emitted when a button is pressed. Example usage:\r\n * \r\n * ```js\r\n * myLaunchpad.on(\"press\", pressInfo => {\r\n *   console.log(pressInfo.button, pressInfo.velocity)\r\n * })\r\n * ```\r\n * \r\n * - `release` - Emitted when a button is released. Example usage:\r\n * \r\n * ```js\r\n * myLaunchpad.on(\"release\", button => {\r\n *   console.log(button)\r\n * })\r\n * ```\r\n * \r\n * @class Launchpad\r\n * @extends {EventEmitter}\r\n */\r\nexport default class Launchpad extends EventEmitter {\r\n  /**\r\n   * Creates an instance of Launchpad.\r\n   * \r\n   * @param {Object} params The paramaters to instantiate the Launchpad.\r\n   * @param {Number} params.in The input port of the Launchpad.\r\n   * @param {Number} params.out The output port of the Launchpad.\r\n   * \r\n   * @example\r\n   * let myLaunchpad = new Launchpad({\r\n   *   in: 1,\r\n   *   out: 1\r\n   * })\r\n   * \r\n   * @memberOf Launchpad\r\n   */\r\n  constructor(params) {\r\n    super()\r\n\r\n    /**\r\n     * All the buttons on this Launchpad. Get one by using `getButton`.\r\n     * @type {Button[]}\r\n     */\r\n    this.buttons = [ ]\r\n    \r\n    this._input = new midi.input()\r\n    this._output = new midi.output()\r\n\r\n    this._input.openPort(params.in)\r\n\r\n    this._input.on(\"message\", (dTime, message) => {\r\n      if(message[0] === 176 || message[0] === 144){\r\n        // button message\r\n        if(message[2] > 0)\r\n          /**\r\n           * Fired when a button is pressed.\r\n           * \r\n           * @event Launchpad#press\r\n           * @type {object}\r\n           * @property {Button} button The button that was pressed\r\n           * @property {Number} velocity The velocity at which the button was pressed\r\n           */\r\n          this.emit(\"press\", {\r\n            button: this.buttons[message[1]],\r\n            velocity: message[2]\r\n          })\r\n        else\r\n          /**\r\n           * Fired when a button is released.\r\n           * \r\n           * @event Launchpad#release\r\n           * @type {Button}\r\n           */\r\n          this.emit(\"release\", this.buttons[message[1]])\r\n      }\r\n    })\r\n\r\n    this._output.openPort(params.out)\r\n\r\n    for(var i=0;i<100;i++)\r\n      this.buttons.push(new Button(self, i))\r\n  }\r\n\r\n  /**\r\n   * Convenience method to add the system-exclusive message header to a message\r\n   * and then send it to the Launchpad.\r\n   * \r\n   * @param {Number[]} bytes The bytes of the SysEx message to send. Header is automatically included.\r\n   * \r\n   * @example\r\n   * myLaunchpad.sendSysEx([0, 1, 2, 3])\r\n   * \r\n   * @memberOf Launchpad\r\n   */\r\n  sendSysEx(bytes){\r\n    // sysex header\r\n    var message = [240, 0, 32, 41, 2, 16]\r\n    // sysex message\r\n    bytes.forEach(byte => message.push(byte))\r\n    // sysex terminator\r\n    message.push(247)\r\n    // console.log(\"sysex\", message)\r\n    this._output.sendMessage(message)\r\n  }\r\n\r\n  /**\r\n   * Get a button on this Launchpad\r\n   * \r\n   * @param {Number} x The x-coordinate of the button.\r\n   * @param {Number} y The y-coordinate of the button.\r\n   * @returns {Button}\r\n   * \r\n   * @example\r\n   * let button = myLaunchpad.getButton(1, 2)\r\n   * \r\n   * // do whatever with the button\r\n   * button.setRgbColor(10, 30, 10)\r\n   * \r\n   * @memberOf Launchpad\r\n   */\r\n  getButton(x, y) {\r\n    return this.buttons[(x.toString() === \"0\" ? \"\" : x.toString()) + y.toString()]\r\n  }\r\n\r\n  /**\r\n   * Convenience method to light up all the buttons on the Launchpad a certain color.\r\n   * \r\n   * @param {Number} color Note representation of the color.\r\n   * \r\n   * @example\r\n   * myLaunchpad.lightAll(23)\r\n   * \r\n   * @memberOf Launchpad\r\n   */\r\n  lightAll(color) {\r\n    this.sendSysEx([14, color])\r\n  }\r\n\r\n  /**\r\n   * Convenience method to light up all the buttons on the Launchpad a certain color with RGB values.\r\n   * \r\n   * @param {Number} r Red value. 0-63\r\n   * @param {Number} g Green value. 0-63\r\n   * @param {Number} b Blue value. 0-63\r\n   * \r\n   * @example\r\n   * myLaunchpad.lightAllRgb(10, 30, 10)\r\n   * \r\n   * @memberOf Launchpad\r\n   */\r\n  lightAllRgb(r, g, b) {\r\n    this.buttons.forEach(button => button.setRgbColor(r, g, b))\r\n  }\r\n\r\n  /**\r\n   * Convenience method to darken all buttons on the Launchpad.\r\n   * \r\n   * @example\r\n   * myLaunchpad.darkAll()\r\n   * \r\n   * @memberOf Launchpad\r\n   */\r\n  darkAll() {\r\n    this.buttons.forEach(button => button.setColor(0))\r\n  }\r\n\r\n  /**\r\n   * Set the Launchpad's layout.\r\n   * \r\n   * @param {String} layout The layout you want to switch to. Can be one of _NOTE, DRUM, FADER, PROGRAMMER_.\r\n   * \r\n   * @example\r\n   * myLaunchpad.toLayout(\"PROGRAMMER\")\r\n   * \r\n   * @memberOf Launchpad\r\n   */\r\n  toLayout(layout) {\r\n    this._output.sendMessage([240, 0, 32, 41, 2, 16, 44, layouts[layout], 247])\r\n  }\r\n\r\n  /**\r\n   * Scroll text across the Launchpad.\r\n   * \r\n   * @param {String} text The text to scroll.\r\n   * @param {Number} color Note representation of the text color.\r\n   * @param {Boolean} loop If true, will loop the text scrolling until another text scroll message is sent.\r\n   * @param {Number} speed The speed of the text scrolling. 1-7\r\n   * \r\n   * @example\r\n   * myLaunchpad.scrollText(\"Hello node!\", 23, true, 5)\r\n   * \r\n   * @memberOf Launchpad\r\n   */\r\n  scrollText(text, color, loop, speed) {\r\n    var message = [20, color, loop]\r\n\r\n    loop = loop ? 1 : 0\r\n\r\n    for(var i=0;i<text.length;i++)\r\n      message.push(text.charCodeAt(i))\r\n    \r\n    this.sendSysEx(message)\r\n    if(speed) this.sendSysEx([20, color, loop, speed])\r\n  }\r\n}",
     "static": true,
     "longname": "src/index.js",
     "access": null,
@@ -524,8 +524,8 @@
     "export": true,
     "importPath": "launchpad-mk2",
     "importStyle": "Launchpad",
-    "description": "A Launchpad instance.",
-    "lineNumber": 19,
+    "description": "A Launchpad instance.\n\nThis class will emit two events:\n\n- `press` - Emitted when a button is pressed. Example usage:\n\n```js\nmyLaunchpad.on(\"press\", pressInfo => {\n  console.log(pressInfo.button, pressInfo.velocity)\n})\n```\n\n- `release` - Emitted when a button is released. Example usage:\n\n```js\nmyLaunchpad.on(\"release\", button => {\n  console.log(button)\n})\n```",
+    "lineNumber": 37,
     "unknown": [
       {
         "tagName": "@class",
@@ -551,7 +551,7 @@
     "examples": [
       "let myLaunchpad = new Launchpad({\n  in: 1,\n  out: 1\n})"
     ],
-    "lineNumber": 35,
+    "lineNumber": 53,
     "unknown": [
       {
         "tagName": "@memberOf",
@@ -600,7 +600,7 @@
     "longname": "src/index.js~Launchpad#buttons",
     "access": null,
     "description": "All the buttons on this Launchpad. Get one by using `getButton`.",
-    "lineNumber": 42,
+    "lineNumber": 60,
     "type": {
       "nullable": null,
       "types": [
@@ -619,7 +619,7 @@
     "longname": "src/index.js~Launchpad#_input",
     "access": null,
     "description": null,
-    "lineNumber": 44,
+    "lineNumber": 62,
     "undocument": true,
     "unknown": [
       {
@@ -642,7 +642,7 @@
     "longname": "src/index.js~Launchpad#_output",
     "access": null,
     "description": null,
-    "lineNumber": 45,
+    "lineNumber": 63,
     "undocument": true,
     "unknown": [
       {
@@ -670,7 +670,7 @@
     "examples": [
       "myLaunchpad.sendSysEx([0, 1, 2, 3])"
     ],
-    "lineNumber": 76,
+    "lineNumber": 111,
     "unknown": [
       {
         "tagName": "@memberOf",
@@ -704,7 +704,7 @@
     "examples": [
       "let button = myLaunchpad.getButton(1, 2)\n\n// do whatever with the button\nbutton.setRgbColor(10, 30, 10)"
     ],
-    "lineNumber": 102,
+    "lineNumber": 137,
     "unknown": [
       {
         "tagName": "@returns",
@@ -760,7 +760,7 @@
     "examples": [
       "myLaunchpad.lightAll(23)"
     ],
-    "lineNumber": 116,
+    "lineNumber": 151,
     "unknown": [
       {
         "tagName": "@memberOf",
@@ -794,7 +794,7 @@
     "examples": [
       "myLaunchpad.lightAllRgb(10, 30, 10)"
     ],
-    "lineNumber": 132,
+    "lineNumber": 167,
     "unknown": [
       {
         "tagName": "@memberOf",
@@ -848,7 +848,7 @@
     "examples": [
       "myLaunchpad.darkAll()"
     ],
-    "lineNumber": 144,
+    "lineNumber": 179,
     "unknown": [
       {
         "tagName": "@memberOf",
@@ -871,7 +871,7 @@
     "examples": [
       "myLaunchpad.toLayout(\"PROGRAMMER\")"
     ],
-    "lineNumber": 158,
+    "lineNumber": 193,
     "unknown": [
       {
         "tagName": "@memberOf",
@@ -905,7 +905,7 @@
     "examples": [
       "myLaunchpad.scrollText(\"Hello node!\", 23, true, 5)"
     ],
-    "lineNumber": 175,
+    "lineNumber": 210,
     "unknown": [
       {
         "tagName": "@memberOf",

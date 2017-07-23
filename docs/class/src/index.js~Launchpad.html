@@ -39,13 +39,13 @@
 </nav>
 
 <div class="content" data-ice="content"><div class="header-notice">
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import Launchpad from &apos;<span><a href="file/src/index.js.html#lineNumber19">launchpad-mk2</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import Launchpad from &apos;<span><a href="file/src/index.js.html#lineNumber37">launchpad-mk2</a></span>&apos;</code></pre></div>
   <span data-ice="access">public</span>
   <span data-ice="kind">class</span>
   
   
   
-  <span data-ice="source">| <span><a href="file/src/index.js.html#lineNumber19">source</a></span></span>
+  <span data-ice="source">| <span><a href="file/src/index.js.html#lineNumber37">source</a></span></span>
 </div>
 
 <div class="self-detail detail">
@@ -66,6 +66,21 @@
   
   
   <div class="description" data-ice="description"><p>A Launchpad instance.</p>
+<p>This class will emit two events:</p>
+<ul>
+<li><code>press</code> - Emitted when a button is pressed. Example usage:</li>
+</ul>
+<pre><code class="lang-js"><code class="source-code prettyprint">myLaunchpad.on(&quot;press&quot;, pressInfo =&gt; {
+  console.log(pressInfo.button, pressInfo.velocity)
+})</code>
+</code></pre>
+<ul>
+<li><code>release</code> - Emitted when a button is released. Example usage:</li>
+</ul>
+<pre><code class="lang-js"><code class="source-code prettyprint">myLaunchpad.on(&quot;release&quot;, button =&gt; {
+  console.log(button)
+})</code>
+</code></pre>
 </div>
   
 
@@ -373,7 +388,7 @@ and then send it to the Launchpad.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber35">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber53">source</a></span></span>
     </span>
   </h3>
 
@@ -461,7 +476,7 @@ and then send it to the Launchpad.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber42">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber60">source</a></span></span>
     </span>
   </h3>
 
@@ -508,7 +523,7 @@ and then send it to the Launchpad.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber144">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber179">source</a></span></span>
     </span>
   </h3>
 
@@ -559,7 +574,7 @@ and then send it to the Launchpad.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber102">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber137">source</a></span></span>
     </span>
   </h3>
 
@@ -649,7 +664,7 @@ button.setRgbColor(10, 30, 10)</code></pre>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber116">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber151">source</a></span></span>
     </span>
   </h3>
 
@@ -717,7 +732,7 @@ button.setRgbColor(10, 30, 10)</code></pre>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber132">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber167">source</a></span></span>
     </span>
   </h3>
 
@@ -799,7 +814,7 @@ button.setRgbColor(10, 30, 10)</code></pre>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber175">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber210">source</a></span></span>
     </span>
   </h3>
 
@@ -888,7 +903,7 @@ button.setRgbColor(10, 30, 10)</code></pre>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber76">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber111">source</a></span></span>
     </span>
   </h3>
 
@@ -957,7 +972,7 @@ and then send it to the Launchpad.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber158">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber193">source</a></span></span>
     </span>
   </h3>
 

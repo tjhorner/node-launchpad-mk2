@@ -13,6 +13,24 @@ var layouts = {
 /**
  * A Launchpad instance.
  * 
+ * This class will emit two events:
+ * 
+ * - `press` - Emitted when a button is pressed. Example usage:
+ * 
+ * ```js
+ * myLaunchpad.on("press", pressInfo => {
+ *   console.log(pressInfo.button, pressInfo.velocity)
+ * })
+ * ```
+ * 
+ * - `release` - Emitted when a button is released. Example usage:
+ * 
+ * ```js
+ * myLaunchpad.on("release", button => {
+ *   console.log(button)
+ * })
+ * ```
+ * 
  * @class Launchpad
  * @extends {EventEmitter}
  */
@@ -50,8 +68,25 @@ export default class Launchpad extends EventEmitter {
       if(message[0] === 176 || message[0] === 144){
         // button message
         if(message[2] > 0)
-          this.emit("press", this.buttons[message[1]], message[2])
+          /**
+           * Fired when a button is pressed.
+           * 
+           * @event Launchpad#press
+           * @type {object}
+           * @property {Button} button The button that was pressed
+           * @property {Number} velocity The velocity at which the button was pressed
+           */
+          this.emit("press", {
+            button: this.buttons[message[1]],
+            velocity: message[2]
+          })
         else
+          /**
+           * Fired when a button is released.
+           * 
+           * @event Launchpad#release
+           * @type {Button}
+           */
           this.emit("release", this.buttons[message[1]])
       }
     })
